@@ -14,6 +14,7 @@ echo "P E A R S O N   updateITunes   S C R I P T   V.1.5" >> /.pss_logs/updateIT
 
 ## Chris Hopkins - originating author at version 1.0 - 10 02 2011
 
+## V.1.6 - Added dialog for already up to date - Chris Hopkins - 15 07 2014
 ## V.1.5 - Added fix for osascript call and more explicit variables - Chris Hopkins - 02 06 2014
 ## V.1.4 - Added bubble notification and report on the version installed - Chris Hopkins - 14 11 2013
 ## V.1.3 - Fixed to get only recent update using head command - Chris Hopkins - 18 07 2013
@@ -55,6 +56,9 @@ echo installer to run is "$itunesInstaller" >> /.pss_logs/updateITunes.log
 if test "$itunesInstaller" = ""
 	then
 		echo no update for iTunes found so quitting here >> /.pss_logs/updateITunes.log
+		iTunesVersionA=$(defaults read /Applications/iTunes.app/Contents/Info.plist CFBundleVersion)
+		## Notify the user that no new version is available
+		"$CD" bubble --debug --titles "Note" --text-colors "0c1c8c" --texts "Your iTunes upgrade is already up to date with version "$iTunesVersionA"" --background-tops "00cb24" --background-bottoms "aefe95" --border-colors "2100b4" "a25f0a" --icons "Info" --no-timeout
 		exit
 fi
 
