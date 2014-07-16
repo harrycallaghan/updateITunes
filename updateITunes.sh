@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ###########################################################################################################
-echo "P E A R S O N   updateITunes   S C R I P T   V.1.6" >> /.pss_logs/updateITunes.log
+echo "P E A R S O N   updateITunes   S C R I P T   V.1.8" >> /.pss_logs/updateITunes.log
 ###########################################################################################################
 
 ## this script runs from casper to update iTunes on the client
@@ -14,6 +14,7 @@ echo "P E A R S O N   updateITunes   S C R I P T   V.1.6" >> /.pss_logs/updateIT
 
 ## Chris Hopkins - originating author at version 1.0 - 10 02 2011
 
+## V.1.8 - Updated osascript call - Chris Hopkins - 16 07 2014
 ## V.1.7 - Moved iTunes quit to be nested in if statement - Chris Hopkins - 16 07 2014
 ## V.1.6 - Added dialog for already up to date - Chris Hopkins - 15 07 2014
 ## V.1.5 - Added fix for osascript call and more explicit variables - Chris Hopkins - 02 06 2014
@@ -55,8 +56,8 @@ if test "$itunesInstaller" = ""
     iTunesMessage="iTunes will now be quit for an update"
     if test "$iTunesRunning" = "iTunes"
        then
-         arch -i386 osascript -e 'tell application "Finder"' -e 'Activate' -e "display dialog \"$iTunesMessage\"" -e 'end tell' giving up after 6
-         arch -i386 osascript -e 'tell application "iTunes" to quit'
+         osascript -e 'tell application "Finder"' -e 'Activate' -e "display dialog \"$iTunesMessage\"" -e 'end tell' giving up after 6
+         osascript -e 'tell application "iTunes" to quit'
          wait
     fi
 
