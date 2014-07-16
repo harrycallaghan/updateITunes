@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ###########################################################################################################
-echo "P E A R S O N   updateITunes   S C R I P T   V.1.5" >> /.pss_logs/updateITunes.log
+echo "P E A R S O N   updateITunes   S C R I P T   V.1.6" >> /.pss_logs/updateITunes.log
 ###########################################################################################################
 
 ## this script runs from casper to update iTunes on the client
@@ -14,6 +14,7 @@ echo "P E A R S O N   updateITunes   S C R I P T   V.1.5" >> /.pss_logs/updateIT
 
 ## Chris Hopkins - originating author at version 1.0 - 10 02 2011
 
+## V.1.7 - Moved iTunes quit to be nested in if statement - Chris Hopkins - 16 07 2014
 ## V.1.6 - Added dialog for already up to date - Chris Hopkins - 15 07 2014
 ## V.1.5 - Added fix for osascript call and more explicit variables - Chris Hopkins - 02 06 2014
 ## V.1.4 - Added bubble notification and report on the version installed - Chris Hopkins - 14 11 2013
@@ -38,18 +39,6 @@ echo ran by: "$USER" at "$timestamp" >> /.pss_logs/updateITunes.log
 ## Declare CocoaDialog calls
 CD=/Library/Application\ Support/Pearson/cocoaDialog.app/Contents/MacOS/cocoaDialog
 
-## Kill iTunes
-iTunesRunning=`ps auxc | grep -v grep | grep iTunes | grep -v iTunesHelper | awk '{print $11}'`
-iTunesMessage="iTunes will now be quit for an update"
-if test "$iTunesRunning" = "iTunes"
-   then
-     arch -i386 osascript -e 'tell application "Finder"' -e 'Activate' -e "display dialog \"$iTunesMessage\"" -e 'end tell' giving up after 6
-     arch -i386 osascript -e 'tell application "iTunes" to quit'
-     wait
-fi
-
-sleep 5
-
 ## get name of iTunes update
 itunesInstaller=$(softwareupdate -l | grep iTunesX | awk '{print $2}' | head -1)
 echo installer to run is "$itunesInstaller" >> /.pss_logs/updateITunes.log
@@ -60,6 +49,18 @@ if test "$itunesInstaller" = ""
 		## Notify the user that no new version is available
 		"$CD" bubble --debug --titles "Note" --text-colors "0c1c8c" --texts "Your iTunes upgrade is already up to date with version "$iTunesVersionA"" --background-tops "00cb24" --background-bottoms "aefe95" --border-colors "2100b4" "a25f0a" --icons "Info" --no-timeout
 		exit
+  else
+    ## Kill iTunes
+    iTunesRunning=`ps auxc | grep -v grep | grep iTunes | grep -v iTunesHelper | awk '{print $11}'`
+    iTunesMessage="iTunes will now be quit for an update"
+    if test "$iTunesRunning" = "iTunes"
+       then
+         arch -i386 osascript -e 'tell application "Finder"' -e 'Activate' -e "display dialog \"$iTunesMessage\"" -e 'end tell' giving up after 6
+         arch -i386 osascript -e 'tell application "iTunes" to quit'
+         wait
+    fi
+
+    sleep 5
 fi
 
 ## perform specific update
